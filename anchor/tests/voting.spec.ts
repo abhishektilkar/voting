@@ -146,5 +146,6 @@ describe('voting', () => {
 		expect(candidate1.candidateVotes.toNumber()).toEqual(1);
 		expect(candidate2.candidateVotes.toNumber()).toEqual(1);
 	
+		
 	})
 })
