@@ -1,5 +1,5 @@
 {
-  "address": "AsjZ3kWAUSQRNt2pZVeJkywhZ6gpLpHZmJjduPmKZDZZ",
+  "address": "BS3TNTV9y3WNu37svS1hn2M8L87f2nNNRdcV2ReaZGH",
   "metadata": {
     "name": "voting",
     "version": "0.1.0",
@@ -8,90 +8,94 @@
   },
   "instructions": [
     {
-      "name": "close",
+      "name": "initialize_candidate",
       "discriminator": [
-        98,
-        165,
-        201,
-        177,
-        108,
-        65,
-        206,
-        96
+        210,
+        107,
+        118,
+        204,
+        255,
+        97,
+        112,
+        26
       ],
       "accounts": [
         {
-          "name": "payer",
+          "name": "candidate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "poll_id"
+              },
+              {
+                "kind": "arg",
+                "path": "candidate_name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "signer",
           "writable": true,
           "signer": true
         },
         {
-          "name": "voting",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "decrement",
-      "discriminator": [
-        106,
-        227,
-        168,
-        59,
-        248,
-        27,
-        150,
-        101
-      ],
-      "accounts": [
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
         {
-          "name": "voting",
-          "writable": true
+          "name": "poll",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "poll_id"
+              }
+            ]
+          }
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "candidate_name",
+          "type": "string"
+        },
+        {
+          "name": "_poll_id",
+          "type": "u64"
+        }
+      ]
     },
     {
-      "name": "increment",
+      "name": "initialize_poll",
       "discriminator": [
-        11,
+        193,
+        22,
+        99,
+        197,
         18,
-        104,
-        9,
-        104,
-        174,
-        59,
-        33
+        33,
+        115,
+        117
       ],
       "accounts": [
         {
-          "name": "voting",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
-      "accounts": [
-        {
-          "name": "payer",
+          "name": "poll",
           "writable": true,
-          "signer": true
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "poll_id"
+              }
+            ]
+          }
         },
         {
-          "name": "voting",
+          "name": "signer",
           "writable": true,
           "signer": true
         },
@@ -100,58 +104,151 @@
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "poll_id",
+          "type": "u64"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "poll_start",
+          "type": "u64"
+        },
+        {
+          "name": "poll_end",
+          "type": "u64"
+        }
+      ]
     },
     {
-      "name": "set",
+      "name": "vote",
       "discriminator": [
-        198,
-        51,
-        53,
-        241,
-        116,
-        29,
+        227,
+        110,
+        155,
+        23,
+        136,
         126,
-        194
+        172,
+        25
       ],
       "accounts": [
         {
-          "name": "voting",
-          "writable": true
+          "name": "candidate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "poll_id"
+              },
+              {
+                "kind": "arg",
+                "path": "candidate_name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "signer",
+          "signer": true
+        },
+        {
+          "name": "poll",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "poll_id"
+              }
+            ]
+          }
         }
       ],
       "args": [
         {
-          "name": "value",
-          "type": "u8"
+          "name": "_candidate_name",
+          "type": "string"
+        },
+        {
+          "name": "_poll_id",
+          "type": "u64"
         }
       ]
     }
   ],
   "accounts": [
     {
-      "name": "Voting",
+      "name": "Candidate",
       "discriminator": [
-        255,
-        176,
-        4,
-        245,
+        86,
+        69,
+        250,
+        96,
+        193,
+        10,
+        222,
+        123
+      ]
+    },
+    {
+      "name": "Poll",
+      "discriminator": [
+        110,
+        234,
+        167,
         188,
-        253,
-        124,
-        25
+        231,
+        136,
+        153,
+        111
       ]
     }
   ],
   "types": [
     {
-      "name": "Voting",
+      "name": "Candidate",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "count",
-            "type": "u8"
+            "name": "candidate_name",
+            "type": "string"
+          },
+          {
+            "name": "candidate_votes",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Poll",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "poll_id",
+            "type": "u64"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "poll_start",
+            "type": "u64"
+          },
+          {
+            "name": "poll_end",
+            "type": "u64"
+          },
+          {
+            "name": "candidate_amount",
+            "type": "u64"
           }
         ]
       }
